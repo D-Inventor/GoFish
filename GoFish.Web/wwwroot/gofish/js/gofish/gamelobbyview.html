@@ -1,0 +1,22 @@
+﻿<div class="container">
+    <div class="row mb-1">
+        <div class="col-12">
+            <h2>Players</h2>
+        </div>
+    </div>
+    <div class="row mb-1">
+        <div class="col-3 d-flex align-items-stretch" ng-repeat="player in game.players track by player.id">
+            <div class="card w-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{player.username}}</h5>
+                    <h6 class="card-subtitle text-muted" ng-if="isThisPlayer(player)">This is you!</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <button class="btn btn-primary" ng-click="startGame()">Start</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+﻿<div class="container-fluid h-100 p-0" ng-controller="ithotl.connectioncontroller as connectionctrl">
+    <div class="row h-100" ng-hide="connectionctrl.ready">
+            Establishing connection with the server...
+    </div>
+    <div class="row no-gutters h-100" ng-if="connectionctrl.ready">
+        <div class="col-10 h-100 p-1 gamewindow" game>
+        </div>
+        <div class="col-2 h-100 border p-1 chatwindow" chat>
+        </div>
+    </div>
+</div>

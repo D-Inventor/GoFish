@@ -1,0 +1,55 @@
+﻿<div class="container">
+    <div class="row mb-1">
+        <div class="col-12">
+            <h2 class="text-center">{{getCurrentPlayer() | playerturn}}</h2>
+        </div>
+    </div>
+    <div class="row mb-1">
+        <div class="col-12">
+            <h2>Players</h2>
+        </div>
+    </div>
+    <div class="row mb-1">
+        <div class="col-3 d-flex align-items-stretch" ng-repeat="player in game.players track by player.id">
+            <div class="card w-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{player.username}}</h5>
+                    <p class="card-text mb-0">Has {{player.cards}} card(s)</p>
+                    <p class="card-text mb-0">Completed sets:</p>
+                    <ul>
+                        <li class="card-text" ng-repeat="(key, value) in player.finishedCollections">{{key}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-3 d-flex align-items-stretch">
+            <div class="card w-100">
+                <div class="card-body">
+                    <p class="card-text">There are {{game.deck}} cards on the deck.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-12">
+            <button class="btn btn-warning" ng-show="!isMyTurn()" ng-click="give()">Give cards</button>
+            <button class="btn btn-warning" ng-show="isMyTurn() && player.cards > 0 && $index !== game.currentPlayer" ng-repeat="player in game.players track by player.id" ng-click="pass($index)">Pass turn to {{player.username}}</button>
+        </div>
+    </div>
+    <hr />
+    <div class="row no-gutters">
+        <div class="col-12">
+            <h2>Your cards</h2>
+        </div>
+        <div class="col-3 d-flex align-items-stretch" ng-repeat="card in game.userCards">
+            <div class="card w-100" ng-click="selectCard($index)">
+                <div class="card-body">
+                    <p class="card-text mb-0">Collection: {{card.collection}}</p>
+                    <p class="card-text mb-0">Index: {{card.index}}</p>
+                    <p class="card-text mb-0 text-muted" ng-show="card.selected">[selected]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

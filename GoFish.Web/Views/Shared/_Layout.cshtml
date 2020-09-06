@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="~/gofish/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="~/gofish/favicon.ico" type="image/x-icon">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Go Fish! | In the Heart of the Lab</title>
+    <link rel="stylesheet" href="~/gofish/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/gofish/css/site.css" />
+    <script src="~/gofish/lib/angular.js/angular.min.js"></script>
+</head>
+<body>
+    <main role="main" class="w-100 h-100" ng-app="ithotl.gofish">
+        @RenderBody()
+    </main>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2020 - GoFish.Web
+        </div>
+    </footer>
+    <script src="~/gofish/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/gofish/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/gofish/lib/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/gofish/js/site.js" asp-append-version="true"></script>
+    <script src="~/gofish/js/gofish/gamehub.service.js" asp-append-version="true"></script>
+    <script src="~/gofish/js/gofish/playerturn.filter.js" asp-append-version="true"></script>
+    <script src="~/gofish/js/gofish/connection.controller.js" asp-append-version="true"></script>
+    <script src="~/gofish/js/gofish/chat.directive.js" asp-append-version="true"></script>
+    <script src="~/gofish/js/gofish/game.directive.js" asp-append-version="true"></script>
+    <script src="~/gofish/js/gofish/create.directive.js" asp-append-version="true"></script>
+    <script src="~/gofish/js/gofish/lobby.directive.js" asp-append-version="true"></script>
+    <script src="~/gofish/js/gofish/join.directive.js" asp-append-version="true"></script>
+    <script src="~/gofish/js/gofish/playing.directive.js" asp-append-version="true"></script>
+    <script src="~/gofish/js/gofish/finished.directive.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -4,6 +4,8 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 using GoFish.Web.Factories;
+using GoFish.Web.Models.Events;
+using GoFish.Web.Services;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -23,7 +25,7 @@ namespace GoFish.Web.Middleware
             _next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext, IKeyFactory keyFactory, ILogger<UserIdMiddleWare> logger)
+        public async Task Invoke(HttpContext httpContext, IKeyFactory keyFactory, IEventEmitter<UserActivity> userActivityEvent, ILogger<UserIdMiddleWare> logger)
         {
             Guid userId = default;
             bool generateNew = true;
@@ -44,6 +46,8 @@ namespace GoFish.Web.Middleware
             {
                 Expires = DateTimeOffset.UtcNow.AddMinutes(5)
             });
+
+            userActivityEvent.Trigger(this, new UserActivity(userId));
 
             await _next(httpContext);
         }

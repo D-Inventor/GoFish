@@ -6,6 +6,7 @@ using Game.Lib;
 using GoFish.Lib.Factories;
 using GoFish.Lib.Models;
 using GoFish.Lib.Providers;
+using GoFish.Web.Extensions;
 using GoFish.Web.Factories;
 using GoFish.Web.Hubs;
 using GoFish.Web.Mappers;
@@ -47,13 +48,13 @@ namespace GoFish.Web
             services.AddTransient<IMapper<Card, CardViewModel>, CardMapper>();
             services.AddTransient<IGameFactory, GameFactory>();
             services.AddTransient<IGameManager<GoFishGame>, GameManager<GoFishGame>>();
-
+            services.Decorate<IGameManager<GoFishGame>, EventfulGameManager<GoFishGame>>();
             services.AddTransient<IFileCardCollectionSource, JsonFileCardCollectionSource>();
             services.AddTransient<ICardCollectionProvider>(sp => new FileCardCollectionProvider("cards.json", sp.GetRequiredService<IEnumerable<IFileCardCollectionSource>>()));
             services.AddTransient<IDeckFactory, DeckFactory>();
-
             services.AddSingleton<RNGCryptoServiceProvider>();
             services.AddSingleton<IKeyFactory, KeyFactory>();
+            services.AddSingleton(typeof(IEventEmitter<>), typeof(GenericEventEmitter<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

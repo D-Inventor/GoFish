@@ -54,7 +54,7 @@ namespace GoFish.Web.Middleware
             aes.Key = keyFactory.Create(keyname);
             aes.IV = keyFactory.Create(ivname);
 
-            var encryptor = aes.CreateEncryptor();
+            ICryptoTransform encryptor = aes.CreateEncryptor();
 
             using MemoryStream ms = new MemoryStream();
             using CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write);
@@ -75,13 +75,13 @@ namespace GoFish.Web.Middleware
                 aes.Key = keyFactory.Create(keyname);
                 aes.IV = keyFactory.Create(ivname);
 
-                var decryptor = aes.CreateDecryptor();
+                ICryptoTransform decryptor = aes.CreateDecryptor();
 
                 using MemoryStream ms = new MemoryStream(Convert.FromBase64String(UserSession));
                 using CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read);
                 using StreamReader sr = new StreamReader(cs);
 
-                var decryptedUserSession = sr.ReadToEnd();
+                string decryptedUserSession = sr.ReadToEnd();
 
                 return Guid.TryParse(decryptedUserSession, out userId);
             }

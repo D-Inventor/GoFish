@@ -1,14 +1,20 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace GoFish.Web.Services
 {
-    public class GenericEventEmitter<TEventArgs> : IEventEmitter<TEventArgs> where TEventArgs : EventArgs
+    public class GenericEventEmitter<TEventArgs> : IAsyncEventEmitter<TEventArgs> where TEventArgs : EventArgs
     {
-        public event EventHandler<TEventArgs> OnEvent;
-        public void Trigger(object source, TEventArgs args)
+        public GenericEventEmitter()
         {
-            var handler = OnEvent;
-            handler?.Invoke(source, args);
+            OnEvent = new AsyncEventCollection<TEventArgs>();
+        }
+
+        public AsyncEventCollection<TEventArgs> OnEvent { get; }
+
+        public Task Trigger(object source, TEventArgs args)
+        {
+            return OnEvent.TriggerAsync(source, args);
         }
     }
 }

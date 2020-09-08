@@ -55,6 +55,9 @@ namespace GoFish.Web.Hubs
             return base.OnDisconnectedAsync(exception);
         }
 
+        public Task Ping()
+            => _userActivityEvent.TriggerAsync(this, new UserActivity(_userContextProvider.UserId));
+
         public async Task Initialise()
         {
             Guid userId = _userContextProvider.UserId;

@@ -1,9 +1,12 @@
 ﻿(function (angular) {
 
     angular.module('ithotl.gofish')
-        .factory('gameservice', [function () {
+        .factory('gameservice', ['$interval', function ($interval) {
 
-            var connection = new signalR.HubConnectionBuilder().withUrl("/gofish/gamehub").build();
+            var connection = new signalR.HubConnectionBuilder()
+                .withAutomaticReconnect()
+                .withUrl("/gofish/gamehub")
+                .build();
             var onReadySubscribers = [];
             var onErrorSubscribers = [];
             var onGameChangeSubscribers = [];
@@ -49,6 +52,12 @@
             }).catch(function (err) {
                 alert(err.toString());
             });
+
+            // keep connection alive by pinging every 2 minutes
+            $interval(function () {
+
+                connection.invoke("ping");
+            }, 120000);
 
 
             // Create a service from the signalr connection

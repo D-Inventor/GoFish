@@ -19,17 +19,15 @@ namespace GoFish.Web.Hubs
     public class GameHub : Hub
     {
         private readonly IUserContextProvider _userContextProvider;
-        private readonly IGameAccessor _gameAccessor;
         private readonly IGameService _gameService;
         private readonly IMapper<GoFishGame, GameViewModel> _gameMapper;
         private readonly IMapper<Card, CardViewModel> _cardMapper;
         private readonly IAsyncEventEmitter<UserConnect<GameHub>> _userConnectEvent;
         private readonly IAsyncEventEmitter<UserDisconnect<GameHub>> _userDisconnectEvent;
 
-        public GameHub(IUserContextProvider userContextProvider, IGameAccessor gameAccessor, IGameService gameService, IMapper<GoFishGame, GameViewModel> gameMapper, IMapper<Card, CardViewModel> cardMapper, IAsyncEventEmitter<UserConnect<GameHub>> userConnectEvent, IAsyncEventEmitter<UserDisconnect<GameHub>> userDisconnectEvent)
+        public GameHub(IUserContextProvider userContextProvider, IGameService gameService, IMapper<GoFishGame, GameViewModel> gameMapper, IMapper<Card, CardViewModel> cardMapper, IAsyncEventEmitter<UserConnect<GameHub>> userConnectEvent, IAsyncEventEmitter<UserDisconnect<GameHub>> userDisconnectEvent)
         {
             _userContextProvider = userContextProvider;
-            _gameAccessor = gameAccessor;
             _gameService = gameService;
             _gameMapper = gameMapper;
             _cardMapper = cardMapper;
@@ -39,17 +37,13 @@ namespace GoFish.Web.Hubs
 
         public override Task OnConnectedAsync()
         {
-            string id = Context.ConnectionId;
             _userConnectEvent.Trigger(this, new UserConnect<GameHub>(Context.ConnectionId, _userContextProvider.UserId));
-
             return base.OnConnectedAsync();
         }
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            string id = Context.ConnectionId;
             _userDisconnectEvent.Trigger(this, new UserDisconnect<GameHub>(Context.ConnectionId));
-
             return base.OnDisconnectedAsync(exception);
         }
 

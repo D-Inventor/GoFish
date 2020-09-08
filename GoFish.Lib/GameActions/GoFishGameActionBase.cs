@@ -6,11 +6,11 @@ using GoFish.Lib.Models;
 
 namespace GoFish.Lib.GameActions
 {
-    public abstract class GoFishGameActionBase : GameActionBase<Models.GoFishGame>
+    public abstract class GoFishGameActionBase : GameActionBase<GoFishGame>
     {
-        protected abstract Result Apply(ref Models.GoFishGame game);
+        protected abstract Result Apply(ref GoFishGame game);
 
-        protected sealed override Result Modify(ref Models.GoFishGame game)
+        protected sealed override Result Modify(ref GoFishGame game)
         {
             ResultBuilder resultBuilder = new ResultBuilder();
             resultBuilder.AddResult(Apply(ref game));
@@ -30,7 +30,7 @@ namespace GoFish.Lib.GameActions
             return resultBuilder.Build();
         }
 
-        private static void HandleEmptyHands(ref Models.GoFishGame game, ResultBuilder resultBuilder)
+        private static void HandleEmptyHands(ref GoFishGame game, ResultBuilder resultBuilder)
         {
             if (game.CurrentPlayer.Cards.Count == 0 && game.Deck.TryDraw(out Card card))
             {
@@ -53,9 +53,9 @@ namespace GoFish.Lib.GameActions
             }
         }
 
-        private static bool IsGameOver(Models.GoFishGame game)
+        private static bool IsGameOver(GoFishGame game)
         {
-            return game.Deck.Count == 0 && !game.Players.Any(p => p.Cards.Count > 0);
+            return (game.Deck.Count == 0 && !game.Players.Any(p => p.Cards.Count > 0)) || game.Players.Count < 2;
         }
     }
 }

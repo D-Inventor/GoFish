@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using System.Security.Cryptography;
+
+using Autofac;
 
 using Game.Lib;
 
 using GoFish.Lib.Factories;
-using GoFish.Lib.Models;
 using GoFish.Lib.Providers;
 using GoFish.Web.Factories;
+using GoFish.Web.HostedServices;
 using GoFish.Web.Hubs;
 using GoFish.Web.Mappers;
 using GoFish.Web.Middleware;
-using GoFish.Web.Models;
 using GoFish.Web.Providers;
 using GoFish.Web.Services;
 
@@ -35,25 +37,28 @@ namespace GoFish.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHostedService<GameChangeNotifier>();
+            services.AddHostedService<IdlePlayerDetection>();
             services.AddControllersWithViews();
             services.AddSignalR();
             services.AddHttpContextAccessor();
+        }
 
-            services.AddScoped<IUserContextProvider, UserContextProvider>();
-            services.AddSingleton<IGameAccessor, GameAccessor>();
-            services.AddScoped<IGameService, GameService>();
-            services.AddTransient<IMapper<GoFishGame, GameViewModel>, GameMapper>();
-            services.AddTransient<IMapper<Player, PlayerViewModel>, PlayerMapper>();
-            services.AddTransient<IMapper<Card, CardViewModel>, CardMapper>();
-            services.AddTransient<IGameFactory, GameFactory>();
-            services.AddTransient<IGameManager<GoFishGame>, GameManager<GoFishGame>>();
-
-            services.AddTransient<IFileCardCollectionSource, JsonFileCardCollectionSource>();
-            services.AddTransient<ICardCollectionProvider>(sp => new FileCardCollectionProvider("cards.json", sp.GetRequiredService<IEnumerable<IFileCardCollectionSource>>()));
-            services.AddTransient<IDeckFactory, DeckFactory>();
-
-            services.AddSingleton<RNGCryptoServiceProvider>();
-            services.AddSingleton<IKeyFactory, KeyFactory>();
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterType<UserContextProvider>().As<IUserContextProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<GameAccessor>().As<IGameAccessor>().SingleInstance();
+            builder.RegisterType<GameService>().As<IGameService>().InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).AsClosedTypesOf(typeof(IMapper<,>)).InstancePerDependency();
+            builder.RegisterType<GameFactory>().As<IGameFactory>().InstancePerDependency();
+            builder.RegisterGeneric(typeof(GameManager<>)).As(typeof(IGameManager<>)).InstancePerDependency();
+            builder.RegisterGenericDecorator(typeof(EventfulGameManager<>), typeof(IGameManager<>));
+            builder.RegisterType<JsonFileCardCollectionSource>().As<IFileCardCollectionSource>().InstancePerDependency();
+            builder.Register<ICardCollectionProvider>(cc => new FileCardCollectionProvider("cards.json", cc.Resolve<IEnumerable<IFileCardCollectionSource>>()));
+            builder.RegisterType<DeckFactory>().As<IDeckFactory>().InstancePerDependency();
+            builder.RegisterType<RNGCryptoServiceProvider>().SingleInstance();
+            builder.RegisterType<KeyFactory>().As<IKeyFactory>().SingleInstance();
+            builder.RegisterGeneric(typeof(GenericEventEmitter<>)).As(typeof(IAsyncEventEmitter<>)).SingleInstance();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

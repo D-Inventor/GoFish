@@ -4,6 +4,8 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 using GoFish.Web.Factories;
+using GoFish.Web.Models.Events;
+using GoFish.Web.Services;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -13,8 +15,8 @@ namespace GoFish.Web.Middleware
 {
     public class UserIdMiddleWare
     {
-        private const string keyname = nameof(UserIdMiddleWare) + "|key";
-        private const string ivname = nameof(UserIdMiddleWare) + "|iv";
+        private const string _keyname = nameof(UserIdMiddleWare) + "|key";
+        private const string _ivname = nameof(UserIdMiddleWare) + "|iv";
 
         private readonly RequestDelegate _next;
 
@@ -51,8 +53,8 @@ namespace GoFish.Web.Middleware
         private static string EncryptUserId(IKeyFactory keyFactory, Guid userId)
         {
             using Aes aes = Aes.Create();
-            aes.Key = keyFactory.Create(keyname);
-            aes.IV = keyFactory.Create(ivname);
+            aes.Key = keyFactory.Create(_keyname);
+            aes.IV = keyFactory.Create(_ivname);
 
             ICryptoTransform encryptor = aes.CreateEncryptor();
 
@@ -72,8 +74,8 @@ namespace GoFish.Web.Middleware
             try
             {
                 using Aes aes = Aes.Create();
-                aes.Key = keyFactory.Create(keyname);
-                aes.IV = keyFactory.Create(ivname);
+                aes.Key = keyFactory.Create(_keyname);
+                aes.IV = keyFactory.Create(_ivname);
 
                 ICryptoTransform decryptor = aes.CreateDecryptor();
 

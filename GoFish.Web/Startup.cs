@@ -38,6 +38,7 @@ namespace GoFish.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHostedService<GameChangeNotifier>();
+            services.AddHostedService<IdlePlayerDetection>();
             services.AddControllersWithViews();
             services.AddSignalR();
             services.AddHttpContextAccessor();

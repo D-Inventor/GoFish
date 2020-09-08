@@ -7,6 +7,6 @@ namespace GoFish.Web.Services
     {
         AsyncEventCollection<TEventArgs> OnEvent { get; }
 
-        Task Trigger(object source, TEventArgs args);
+        Task TriggerAsync(object source, TEventArgs args);
     }
 }

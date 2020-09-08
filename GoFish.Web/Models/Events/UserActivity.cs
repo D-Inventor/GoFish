@@ -9,6 +9,6 @@ namespace GoFish.Web.Models.Events
             UserId = userId;
         }
 
-        private Guid UserId { get; }
+        public Guid UserId { get; }
     }
 }

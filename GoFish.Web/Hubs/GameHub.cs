@@ -24,8 +24,15 @@ namespace GoFish.Web.Hubs
         private readonly IMapper<Card, CardViewModel> _cardMapper;
         private readonly IAsyncEventEmitter<UserConnect<GameHub>> _userConnectEvent;
         private readonly IAsyncEventEmitter<UserDisconnect<GameHub>> _userDisconnectEvent;
+        private readonly IAsyncEventEmitter<UserActivity> _userActivityEvent;
 
-        public GameHub(IUserContextProvider userContextProvider, IGameService gameService, IMapper<GoFishGame, GameViewModel> gameMapper, IMapper<Card, CardViewModel> cardMapper, IAsyncEventEmitter<UserConnect<GameHub>> userConnectEvent, IAsyncEventEmitter<UserDisconnect<GameHub>> userDisconnectEvent)
+        public GameHub(IUserContextProvider userContextProvider,
+                       IGameService gameService,
+                       IMapper<GoFishGame, GameViewModel> gameMapper,
+                       IMapper<Card, CardViewModel> cardMapper,
+                       IAsyncEventEmitter<UserConnect<GameHub>> userConnectEvent,
+                       IAsyncEventEmitter<UserDisconnect<GameHub>> userDisconnectEvent,
+                       IAsyncEventEmitter<UserActivity> userActivityEvent)
         {
             _userContextProvider = userContextProvider;
             _gameService = gameService;
@@ -33,17 +40,18 @@ namespace GoFish.Web.Hubs
             _cardMapper = cardMapper;
             _userConnectEvent = userConnectEvent;
             _userDisconnectEvent = userDisconnectEvent;
+            _userActivityEvent = userActivityEvent;
         }
 
         public override Task OnConnectedAsync()
         {
-            _userConnectEvent.Trigger(this, new UserConnect<GameHub>(Context.ConnectionId, _userContextProvider.UserId));
+            _userConnectEvent.TriggerAsync(this, new UserConnect<GameHub>(Context.ConnectionId, _userContextProvider.UserId));
             return base.OnConnectedAsync();
         }
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            _userDisconnectEvent.Trigger(this, new UserDisconnect<GameHub>(Context.ConnectionId));
+            _userDisconnectEvent.TriggerAsync(this, new UserDisconnect<GameHub>(Context.ConnectionId));
             return base.OnDisconnectedAsync(exception);
         }
 
@@ -60,6 +68,7 @@ namespace GoFish.Web.Hubs
             }
 
             await Clients.Caller.SendAsync("ReceiveGameData", userId, model);
+            await _userActivityEvent.TriggerAsync(this, new UserActivity(userId));
         }
 
         public async Task Create(string Username)
@@ -83,6 +92,10 @@ namespace GoFish.Web.Hubs
             {
                 await Clients.Caller.SendAsync("ReceiveError", e.Message);
             }
+            finally
+            {
+                await _userActivityEvent.TriggerAsync(this, new UserActivity(_userContextProvider.UserId));
+            }
         }
 
         public async Task Join(string Username)
@@ -99,6 +112,10 @@ namespace GoFish.Web.Hubs
             catch (Exception e)
             {
                 await Clients.Caller.SendAsync("ReceiveError", e.Message);
+            }
+            finally
+            {
+                await _userActivityEvent.TriggerAsync(this, new UserActivity(_userContextProvider.UserId));
             }
         }
 
@@ -117,6 +134,10 @@ namespace GoFish.Web.Hubs
             {
                 await Clients.Caller.SendAsync("ReceiveError", e.Message);
             }
+            finally
+            {
+                await _userActivityEvent.TriggerAsync(this, new UserActivity(_userContextProvider.UserId));
+            }
         }
 
         public async Task Pass(Guid id)
@@ -134,6 +155,10 @@ namespace GoFish.Web.Hubs
             {
                 await Clients.Caller.SendAsync("ReceiveError", e.Message);
             }
+            finally
+            {
+                await _userActivityEvent.TriggerAsync(this, new UserActivity(_userContextProvider.UserId));
+            }
         }
 
         public async Task Give(IEnumerable<CardViewModel> cards)
@@ -150,6 +175,10 @@ namespace GoFish.Web.Hubs
             catch (Exception e)
             {
                 await Clients.Caller.SendAsync("ReceiveError", e.Message);
+            }
+            finally
+            {
+                await _userActivityEvent.TriggerAsync(this, new UserActivity(_userContextProvider.UserId));
             }
         }
     }

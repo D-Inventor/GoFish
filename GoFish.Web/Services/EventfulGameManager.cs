@@ -21,7 +21,7 @@ namespace GoFish.Web.Services
             Result result = _decoratee.PerformAction(gameAction, ref game);
             if (result.Success)
             {
-                _eventEmitter.Trigger(_decoratee, new GameChange<TGameModel>(game, result));
+                _eventEmitter.TriggerAsync(_decoratee, new GameChange<TGameModel>(game, result)).Wait();
             }
             return result;
         }

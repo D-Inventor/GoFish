@@ -25,7 +25,7 @@ namespace GoFish.Web.Middleware
             _next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext, IKeyFactory keyFactory, IAsyncEventEmitter<UserActivity> userActivityEvent, ILogger<UserIdMiddleWare> logger)
+        public async Task Invoke(HttpContext httpContext, IKeyFactory keyFactory, ILogger<UserIdMiddleWare> logger)
         {
             Guid userId = default;
             bool generateNew = true;
@@ -47,7 +47,6 @@ namespace GoFish.Web.Middleware
                 Expires = DateTimeOffset.UtcNow.AddMinutes(5)
             });
 
-            await userActivityEvent.Trigger(this, new UserActivity(userId));
             await _next(httpContext);
         }
 

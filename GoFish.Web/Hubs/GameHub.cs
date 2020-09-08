@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +8,7 @@ using Game.Lib;
 using GoFish.Lib.Models;
 using GoFish.Web.Mappers;
 using GoFish.Web.Models;
+using GoFish.Web.Models.Events;
 using GoFish.Web.Providers;
 using GoFish.Web.Services;
 
@@ -19,37 +19,44 @@ namespace GoFish.Web.Hubs
     public class GameHub : Hub
     {
         private readonly IUserContextProvider _userContextProvider;
-        private readonly IGameAccessor _gameAccessor;
         private readonly IGameService _gameService;
         private readonly IMapper<GoFishGame, GameViewModel> _gameMapper;
         private readonly IMapper<Card, CardViewModel> _cardMapper;
+        private readonly IAsyncEventEmitter<UserConnect<GameHub>> _userConnectEvent;
+        private readonly IAsyncEventEmitter<UserDisconnect<GameHub>> _userDisconnectEvent;
+        private readonly IAsyncEventEmitter<UserActivity> _userActivityEvent;
 
-        public GameHub(IUserContextProvider userContextProvider, IGameAccessor gameAccessor, IGameService gameService, IMapper<GoFishGame, GameViewModel> gameMapper, IMapper<Card, CardViewModel> cardMapper)
+        public GameHub(IUserContextProvider userContextProvider,
+                       IGameService gameService,
+                       IMapper<GoFishGame, GameViewModel> gameMapper,
+                       IMapper<Card, CardViewModel> cardMapper,
+                       IAsyncEventEmitter<UserConnect<GameHub>> userConnectEvent,
+                       IAsyncEventEmitter<UserDisconnect<GameHub>> userDisconnectEvent,
+                       IAsyncEventEmitter<UserActivity> userActivityEvent)
         {
             _userContextProvider = userContextProvider;
-            _gameAccessor = gameAccessor;
             _gameService = gameService;
             _gameMapper = gameMapper;
             _cardMapper = cardMapper;
+            _userConnectEvent = userConnectEvent;
+            _userDisconnectEvent = userDisconnectEvent;
+            _userActivityEvent = userActivityEvent;
         }
-
-        private static readonly ConcurrentDictionary<string, Guid> _connectedUsers = new ConcurrentDictionary<string, Guid>();
 
         public override Task OnConnectedAsync()
         {
-            string id = Context.ConnectionId;
-            _ = _connectedUsers.TryAdd(id, _userContextProvider.UserId);
-
+            _userConnectEvent.TriggerAsync(this, new UserConnect<GameHub>(Context.ConnectionId, _userContextProvider.UserId));
             return base.OnConnectedAsync();
         }
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            string id = Context.ConnectionId;
-            _ = _connectedUsers.TryRemove(id, out _);
-
+            _userDisconnectEvent.TriggerAsync(this, new UserDisconnect<GameHub>(Context.ConnectionId));
             return base.OnDisconnectedAsync(exception);
         }
+
+        public Task Ping()
+            => _userActivityEvent.TriggerAsync(this, new UserActivity(_userContextProvider.UserId));
 
         public async Task Initialise()
         {
@@ -64,6 +71,7 @@ namespace GoFish.Web.Hubs
             }
 
             await Clients.Caller.SendAsync("ReceiveGameData", userId, model);
+            await _userActivityEvent.TriggerAsync(this, new UserActivity(userId));
         }
 
         public async Task Create(string Username)
@@ -76,18 +84,20 @@ namespace GoFish.Web.Hubs
                     await Clients.Caller.SendAsync("ReceiveError", result.Feedback);
                     return;
                 }
-                await SendGameChange(result);
 
                 if (!(result = _gameService.Join(Username)).Success)
                 {
                     await Clients.Caller.SendAsync("ReceiveError", result.Feedback);
                     return;
                 }
-                await SendGameChange(result);
             }
             catch (Exception e)
             {
                 await Clients.Caller.SendAsync("ReceiveError", e.Message);
+            }
+            finally
+            {
+                await _userActivityEvent.TriggerAsync(this, new UserActivity(_userContextProvider.UserId));
             }
         }
 
@@ -101,11 +111,14 @@ namespace GoFish.Web.Hubs
                     await Clients.Caller.SendAsync("ReceiveError", result.Feedback);
                     return;
                 }
-                await SendGameChange(result);
             }
             catch (Exception e)
             {
                 await Clients.Caller.SendAsync("ReceiveError", e.Message);
+            }
+            finally
+            {
+                await _userActivityEvent.TriggerAsync(this, new UserActivity(_userContextProvider.UserId));
             }
         }
 
@@ -119,11 +132,14 @@ namespace GoFish.Web.Hubs
                     await Clients.Caller.SendAsync("ReceiveError", result.Feedback);
                     return;
                 }
-                await SendGameChange(result);
             }
             catch (Exception e)
             {
                 await Clients.Caller.SendAsync("ReceiveError", e.Message);
+            }
+            finally
+            {
+                await _userActivityEvent.TriggerAsync(this, new UserActivity(_userContextProvider.UserId));
             }
         }
 
@@ -137,11 +153,14 @@ namespace GoFish.Web.Hubs
                     await Clients.Caller.SendAsync("ReceiveError", result.Feedback);
                     return;
                 }
-                await SendGameChange(result);
             }
             catch (Exception e)
             {
                 await Clients.Caller.SendAsync("ReceiveError", e.Message);
+            }
+            finally
+            {
+                await _userActivityEvent.TriggerAsync(this, new UserActivity(_userContextProvider.UserId));
             }
         }
 
@@ -155,23 +174,14 @@ namespace GoFish.Web.Hubs
                     await Clients.Caller.SendAsync("ReceiveError", result.Feedback);
                     return;
                 }
-                await SendGameChange(result);
             }
             catch (Exception e)
             {
                 await Clients.Caller.SendAsync("ReceiveError", e.Message);
             }
-        }
-
-        private async Task SendGameChange(Result result)
-        {
-            GoFishGame game = _gameAccessor.Game;
-            GameViewModel model = _gameMapper.Map(game);
-            foreach (KeyValuePair<string, Guid> user in _connectedUsers)
+            finally
             {
-                Player player = game.Players.FirstOrDefault(p => p.Id.Equals(user.Value));
-                model.UserCards = !(player is null) ? _cardMapper.MapRange(player.Cards) : null;
-                await Clients.Client(user.Key).SendAsync("ReceiveGameChange", result, model);
+                await _userActivityEvent.TriggerAsync(this, new UserActivity(_userContextProvider.UserId));
             }
         }
     }

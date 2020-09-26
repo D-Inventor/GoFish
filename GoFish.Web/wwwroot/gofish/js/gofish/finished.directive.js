@@ -21,8 +21,8 @@
                     return;
                 }
 
-                $scope.winners = game.players.map(function (p) { return { name: p.username, sets: Object.keys(p.finishedCollections) } });
-                $scope.winners.sort(function (a, b) { return b.score - a.score });
+                $scope.winners = game.players.map(function (p) { return { name: p.username, sets: Object.keys(p.finishedCollections) }; });
+                $scope.winners.sort(function (a, b) { return b.sets.length - a.sets.length; });
             }
 
             var onChange = function (msg, newgame) {

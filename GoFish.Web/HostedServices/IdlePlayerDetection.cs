@@ -42,13 +42,14 @@ namespace GoFish.Web.HostedServices
 
         private void CheckIdle(object state)
         {
-            foreach(var key in _lastRegisteredActivity.Keys)
+            var game = _gameAccessor.Game;
+            if (game is null) return;
+            foreach (var key in _lastRegisteredActivity.Keys)
             {
-                if(_lastRegisteredActivity.TryGetValue(key, out var dateTime) && (DateTimeOffset.UtcNow - dateTime).TotalMinutes >= 5)
+                if (_lastRegisteredActivity.TryGetValue(key, out var dateTime) && (DateTimeOffset.UtcNow - dateTime).TotalMinutes >= 5)
                 {
                     if (!_lastRegisteredActivity.TryRemove(key, out _)) continue;
-                    
-                    var game = _gameAccessor.Game;
+
                     var player = game.Players.FirstOrDefault(p => p.Id.Equals(key));
                     if (player is null) continue;
 

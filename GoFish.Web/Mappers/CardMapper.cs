@@ -13,7 +13,7 @@ namespace GoFish.Web.Mappers
             {
                 Collection = input.Collection,
                 Index = input.Index,
-                Graphic = input.Description
+                Description = input.Description
             };
 
             return result;

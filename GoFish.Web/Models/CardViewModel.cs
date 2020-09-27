@@ -4,6 +4,6 @@
     {
         public string Collection { get; set; }
         public int Index { get; set; }
-        public string Graphic { get; set; }
+        public string Description { get; set; }
     }
 }

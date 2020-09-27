@@ -2,11 +2,29 @@
   "Artemis": [
     {
       "Index": 1,
-      "Description": ""
+      "Description": "IGN: Artemis_the_gr8"
     },
     {
       "Index": 2,
-      "Description": ""
+      "Description": "Lives in: The Netherlands"
+    },
+    {
+      "Index": 3,
+      "Description": "“Heyyyyyyyyyyyyyyy :D”"
+    },
+    {
+      "Index": 4,
+      "Description": "Is secretly a fire demon"
+    }
+  ],
+  "Bonpyro": [
+    {
+      "Index": 1,
+      "Description": "IGN: Bonpyro"
+    },
+    {
+      "Index": 2,
+      "Description": "Lives in: Canada"
     },
     {
       "Index": 3,
@@ -20,11 +38,11 @@
   "Cyber": [
     {
       "Index": 1,
-      "Description": ""
+      "Description": "IGN: CyberDrain"
     },
     {
       "Index": 2,
-      "Description": ""
+      "Description": "Lives in: The Netherlands"
     },
     {
       "Index": 3,
@@ -32,17 +50,35 @@
     },
     {
       "Index": 4,
+      "Description": "Loves to murder his friends"
+    }
+  ],
+  "Dandy": [
+    {
+      "Index": 1,
+      "Description": "IGN: Danderlyon"
+    },
+    {
+      "Index": 2,
+      "Description": "Lives in: UK"
+    },
+    {
+      "Index": 3,
       "Description": ""
+    },
+    {
+      "Index": 4,
+      "Description": "Has serious WoW skills"
     }
   ],
   "Dennis": [
     {
       "Index": 1,
-      "Description": ""
+      "Description": "IGN: D_Inventor"
     },
     {
       "Index": 2,
-      "Description": ""
+      "Description": "Lives in: The Netherlands"
     },
     {
       "Index": 3,
@@ -50,17 +86,35 @@
     },
     {
       "Index": 4,
-      "Description": ""
+      "Description": "Never finishes a project"
     }
   ],
   "Elly": [
     {
       "Index": 1,
-      "Description": ""
+      "Description": "IGN: Monkeys919"
     },
     {
       "Index": 2,
+      "Description": "Lives in: UK"
+    },
+    {
+      "Index": 3,
       "Description": ""
+    },
+    {
+      "Index": 4,
+      "Description": "Has died a 1000 times"
+    }
+  ],
+  "Erika": [
+    {
+      "Index": 1,
+      "Description": "IGN: 3rik33pp3ri"
+    },
+    {
+      "Index": 2,
+      "Description": "Lives in: Finland"
     },
     {
       "Index": 3,
@@ -69,38 +123,110 @@
     {
       "Index": 4,
       "Description": ""
+    }
+  ],
+  "Mikko": [
+    {
+      "Index": 1,
+      "Description": "IGN: MiGG0535"
+    },
+    {
+      "Index": 2,
+      "Description": "Lives in: Finland"
+    },
+    {
+      "Index": 3,
+      "Description": ""
+    },
+    {
+      "Index": 4,
+      "Description": "Looks like a viking"
+    }
+  ],
+  "Odin": [
+    {
+      "Index": 1,
+      "Description": "IGN: Legendary_Odin"
+    },
+    {
+      "Index": 2,
+      "Description": "Lives in: The Netherlands"
+    },
+    {
+      "Index": 3,
+      "Description": ""
+    },
+    {
+      "Index": 4,
+      "Description": "Is not the noteblock bandit"
+    }
+  ],
+  "Omega": [
+    {
+      "Index": 1,
+      "Description": "IGN: Sir_Fiddlesticks"
+    },
+    {
+      "Index": 2,
+      "Description": "Lives in: Sweden"
+    },
+    {
+      "Index": 3,
+      "Description": "\"Very epic\""
+    },
+    {
+      "Index": 4,
+      "Description": "Knows random facts"
     }
   ],
   "Piisa": [
     {
       "Index": 1,
-      "Description": ""
+      "Description": "IGN: Piisamirotta"
     },
     {
       "Index": 2,
-      "Description": ""
+      "Description": "Lives in: Finland"
     },
     {
       "Index": 3,
-      "Description": ""
+      "Description": "“syötän sinut poroille”"
     },
     {
       "Index": 4,
-      "Description": ""
+      "Description": "Worships the Mamelukkikala"
+    }
+  ],
+  "Rico": [
+    {
+      "Index": 1,
+      "Description": "IGN: Ricodinio"
+    },
+    {
+      "Index": 2,
+      "Description": "Lives in: The Netherlands"
+    },
+    {
+      "Index": 3,
+      "Description": "\"a base without redstone is no base\""
+    },
+    {
+      "Index": 4,
+      "Description": "is a redstone specialist "
     }
   ],
   "Sam": [
     {
       "Index": 1,
-      "Description": ""
+      "Description": "IGN: SamanthaCation"
     },
     {
       "Index": 2,
-      "Description": ""
+      "Description": "Lives in: UK"
     },
     {
       "Index": 3,
-      "Description": ""
+      "Description": "\"We don't panic\""
     },
     {
       "Index": 4,
@@ -110,15 +236,33 @@
   "Thor": [
     {
       "Index": 1,
-      "Description": ""
+      "Description": "IGN: Thorulf"
     },
     {
       "Index": 2,
-      "Description": ""
+      "Description": "Lives in: Sweden"
     },
     {
       "Index": 3,
+      "Description": "\"When are you going to buy it?\""
+    },
+    {
+      "Index": 4,
       "Description": ""
+    }
+  ],
+  "TZ": [
+    {
+      "Index": 1,
+      "Description": "IGN: Tzvi_"
+    },
+    {
+      "Index": 2,
+      "Description": "Lives in: USA"
+    },
+    {
+      "Index": 3,
+      "Description": "\"Yeeehhaawwww\""
     },
     {
       "Index": 4,
